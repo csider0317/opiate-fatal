@@ -1,6 +1,5 @@
-use opiates
+use opiate
 
--- figuring YOY increase or decrease for Benzo at the state level     
 with count as
 ( SELECT 
 	Year, 
@@ -16,10 +15,9 @@ select
     c.total_Benzo, 
     /*p.total_pop,*/
     LAG(total_Benzo) OVER ( ORDER BY Year ) AS Drugs_Previous_Year,
-       total_Benzo - LAG(total_Benzo) OVER ( ORDER BY Year ) AS YOY_Difference, 
-       total_Benzo / LAG(total_Benzo) OVER ( ORDER BY Year )-1 AS YOY_percent
-	FROM count as c
-    /*LEFT JOIN pop_inc as p 
-    on c.year=p.year and c.Geography=p.County*/
-     
-
+       total_Benzo - LAG(total_Benzo) OVER ( ORDER BY Year ) AS YOY_Diff, 
+		
+      	FROM count as c
+        
+        
+        Select * from scripts
