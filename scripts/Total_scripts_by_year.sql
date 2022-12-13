@@ -54,7 +54,25 @@ FROM (
 ) b
 WHERE b.rn = 1
 
+--  od  for worst counies each year, seems no real corrulation between high scripts and OD
 
+with worse as (SELECT w.county, w.year, w.opiates_per_100 
+FROM (
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY year ORDER BY opiates_per_100 DESC) rn 
+  FROM 2010_2020_scripts
+) w
+WHERE w.rn = 1), 
+pop as(SELECT a.*, 
+p.total_pop
+from alldrugoverdose_clean as a
+left join pop_inc as p
+ON a.county=p.county and a.year=p.year)
+SELECT w.*, 
+p.*
+ from worse as w
+ LEFT JOIN pop as p
+ on w.county=p.county and w.year=p.year
+WHERE p.year >= 2013
 
 
 
