@@ -72,9 +72,19 @@ p.*
  from worse as w
  LEFT JOIN pop as p
  on w.county=p.county and w.year=p.year
-WHERE p.year >= 2013
 
 
+-- big city scripts/pop/od
+
+with big_city as (SELECT *
+from 2010_2020_scripts
+WHERE county IN ('Davidson', 'Shelby', 'Knox', 'Hamilton'))
+SELECT w.county, w.year, w.opiates_per_100 
+FROM (
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY year ORDER BY opiates_per_100 DESC) rn 
+  FROM big_city
+) w
+WHERE w.rn = 1 
 
 
 
