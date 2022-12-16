@@ -87,7 +87,7 @@ opiates_per_100,
  
 
 
-
+SELECT DISTINCT(county) from scripts
 
 
 

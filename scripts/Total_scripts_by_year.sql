@@ -78,13 +78,24 @@ p.*
 
 with big_city as (SELECT *
 from 2010_2020_scripts
-WHERE county IN ('Davidson', 'Shelby', 'Knox', 'Hamilton'))
-SELECT w.county, w.year, w.opiates_per_100 
+WHERE county IN ('Davidson', 'Shelby', 'Knox', 'Hamilton')),
+bg as (SELECT w.county, w.year, w.opiates_per_100 
 FROM (
   SELECT *, ROW_NUMBER() OVER (PARTITION BY year ORDER BY opiates_per_100 DESC) rn 
   FROM big_city
 ) w
-WHERE w.rn = 1 
+WHERE w.rn = 1),
+pop_big as(SELECT a.*, 
+p.total_pop
+from alldrugoverdose_clean as a
+left join pop_inc as p
+ON a.county=p.county and a.year=p.year)
+SELECT bg.*, 
+p.*
+ from bg 
+ LEFT JOIN pop_big as p
+ on bg.county=p.county and bg.year=p.year
+-- WHERE year >= '2013'
 
-
+-- USA rate per 100 vs TN rate per 100 2017-2020
 
