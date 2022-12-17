@@ -43,6 +43,5 @@ row_number() over (
  
  
  
-  select * from pop_inc
   
  

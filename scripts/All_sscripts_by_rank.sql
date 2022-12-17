@@ -83,13 +83,66 @@ opiates_per_100,
                 on top5.county=drugs.Geography and top5.year=drugs.year
                 WHERE top5.year > 2016
  
-
+ 
+ -- remove rank combine and avg rate_per_100
+with top as(SELECT 
+county, 
+year, 
+opiates_per_100,
+ RANK() OVER(PARTITION BY Year ORDER BY opiates_per_100 DESC) AS Rnk
+ from 2010_2020_scripts),
+ top5 as(SELECT
+ county, 
+ year, 
+ opiates_per_100, 
+ Rnk
+ from top
+ where Rnk <= 5),
+ drugs as (select 
+				Geography, 
+                year, 
+                Indicator, 
+                value
+                FROM scripts 
+                WHERE ValueType = 'Count' and Indicator NOT LIKE 'All_%')
+                SELECT
+                top5.county, 
+                top5.year,
+                drugs.Indicator,
+                drugs.value
+                FROM top5
+                LEFT JOIN drugs
+                on top5.county=drugs.Geography and top5.year=drugs.year
+                WHERE top5.year > 2016
  
 
 
-SELECT DISTINCT(county) from scripts
+SELECT * from 2010_2020_scripts
+select distinct(year) from 2010_2020_scripts 
+SELECT
+County, 
+ROUND(SUM(opiates_per_100)/15,2) as scripts_per_100 
+from 2010_2020_scripts
+WHERE year >= 2016
+GROUP BY county
 
 
+SELECT
+County, 
+--ROUND(SUM(opiates_per_100)/15,2) as scripts_per_100 
+opiates_per_100
+from 2010_2020_scripts
+GROUP BY County
+
+SELECT * from fatal
+
+SELECT
+Geography, 
+SUM(value) as total,
+drug_type
+FROM fatal
+WHERE year >= 2016
+GROUP BY Geography, drug_type
 
 
 
