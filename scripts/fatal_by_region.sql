@@ -1,4 +1,4 @@
-use opiates
+use opiate
 
 SELECT * from fatal 
 
